@@ -9,12 +9,14 @@ simple, easily readable, and easily modifiable.  It is not optimized,
 and omits many desirable features.
 """
 
-#### Libraries
+# Libraries
 # Standard library
 import random
+import time
 
 # Third-party libraries
 import numpy as np
+
 
 class Network(object):
 
@@ -41,6 +43,32 @@ class Network(object):
             a = sigmoid(np.dot(w, a)+b)
         return a
 
+    def SGD2(self, training_data, epochs, mini_batch_size, eta,
+             test_data=None):
+        """Train the neural network using mini-batch stochastic
+        gradient descent.  The ``training_data`` is a list of tuples
+        ``(x, y)`` representing the training inputs and the desired
+        outputs.  The other non-optional parameters are
+        self-explanatory.  If ``test_data`` is provided then the
+        network will be evaluated against the test data after each
+        epoch, and partial progress printed out.  This is useful for
+        tracking progress, but slows things down substantially."""
+        if test_data:
+            n_test = len(test_data)
+        n = len(training_data)
+        for j in range(epochs):
+            random.shuffle(training_data)
+            mini_batches = [
+                training_data[k:k+mini_batch_size]
+                for k in range(0, n, mini_batch_size)]
+            for mini_batch in mini_batches:
+                self.update_mini_batch(mini_batch, eta)
+            if test_data:
+                print("Epoch {0}: {1} / {2}".format(
+                    j, self.evaluate(test_data), n_test))
+            else:
+                print("Epoch {0} complete".format(j))
+
     def SGD(self, training_data, epochs, mini_batch_size, eta,
             test_data=None):
         """Train the neural network using mini-batch stochastic
@@ -52,21 +80,47 @@ class Network(object):
         epoch, and partial progress printed out.  This is useful for
         tracking progress, but slows things down substantially."""
         if test_data: n_test = len(test_data)
+        self.mini_batch_size = mini_batch_size  # to be used in other functions
         n = len(training_data)
+        start = time.time()  # begin timer
+
         for j in range(epochs):
             random.shuffle(training_data)
+
             mini_batches = [
                 training_data[k:k+mini_batch_size]
                 for k in range(0, n, mini_batch_size)]
-            for mini_batch in mini_batches:
-                self.update_mini_batch(mini_batch, eta)
-            if test_data:
-                print ("Epoch {0}: {1} / {2}".format(
-                    j, self.evaluate(test_data), n_test))
-            else:
-                print ("Epoch {0} complete".format(j))
+            
+            mini_batches_X, mini_batches_Y = [], []
 
-    def update_mini_batch(self, mini_batch, eta):
+            for batch in mini_batches:
+                mini_batches_X.append(np.column_stack(tuple([batch[k][0]
+                                                             for k in range(mini_batch_size)])))
+                mini_batches_Y.append(np.column_stack(tuple([batch[k][1]
+                                                             for k in range(mini_batch_size)])))
+                
+            for X, Y in zip(mini_batches_X, mini_batches_Y):
+                self.update_mini_batch(X, Y, eta)
+            if test_data:
+                print("Epoch {0}: {1} / {2}, elapsed time: {3:.2f}s".format(
+                    j, self.evaluate(test_data), n_test, time.time()-start))
+            else:
+                print("Epoch {0} complete, elapsed time: {1:.2f}s".format(
+                    j, time.time()-start))
+
+    def update_mini_batch(self, X, Y, eta):
+        """Update the network's weights and biases by applying
+        gradient descent using backpropagation to a single mini batch.
+        ``eta`` is the learning rate."""
+        nabla_b, nabla_w = self.backprop(X, Y)
+        sum_nabla_b = [np.sum(nb, axis=1).reshape(
+            (nb.shape[0], 1)) for nb in nabla_b]
+        self.weights = [w-(eta/self.mini_batch_size)*nw
+                        for w, nw in zip(self.weights, nabla_w)]
+        self.biases = [b-(eta/self.mini_batch_size)*nb
+                       for b, nb in zip(self.biases, sum_nabla_b)]
+
+    def update_mini_batch2(self, mini_batch, eta):
         """Update the network's weights and biases by applying
         gradient descent using backpropagation to a single mini batch.
         The ``mini_batch`` is a list of tuples ``(x, y)``, and ``eta``
@@ -91,8 +145,8 @@ class Network(object):
         nabla_w = [np.zeros(w.shape) for w in self.weights]
         # feedforward
         activation = x
-        activations = [x] # list to store all the activations, layer by layer
-        zs = [] # list to store all the z vectors, layer by layer
+        activations = [x]  # list to store all the activations, layer by layer
+        zs = []  # list to store all the z vectors, layer by layer
         for b, w in zip(self.biases, self.weights):
             z = np.dot(w, activation)+b
             zs.append(z)
@@ -131,10 +185,12 @@ class Network(object):
         partial a for the output activations."""
         return (output_activations-y)
 
-#### Miscellaneous functions
+# Miscellaneous functions
+
 def sigmoid(z):
     """The sigmoid function."""
     return 1.0/(1.0+np.exp(-z))
+
 
 def sigmoid_prime(z):
     """Derivative of the sigmoid function."""
