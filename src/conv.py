@@ -40,7 +40,11 @@ def shallow(n=3, epochs=60):
 
 def basic_conv(n=3, epochs=60):
     for j in range(n):
+<<<<<<< HEAD
         print ("Conv + FC architecture")
+=======
+        print("Conv + FC architecture")
+>>>>>>> 4dbac93ec68063f0dd08e0e8c882eed51ee57fc4
         net = Network([
             ConvPoolLayer(image_shape=(mini_batch_size, 1, 28, 28), 
                           filter_shape=(20, 1, 5, 5), 
@@ -53,7 +57,11 @@ def basic_conv(n=3, epochs=60):
 
 def omit_FC():
     for j in range(3):
+<<<<<<< HEAD
         print ("Conv only, no FC")
+=======
+        print("Conv only, no FC")
+>>>>>>> 4dbac93ec68063f0dd08e0e8c882eed51ee57fc4
         net = Network([
             ConvPoolLayer(image_shape=(mini_batch_size, 1, 28, 28), 
                           filter_shape=(20, 1, 5, 5), 
@@ -64,7 +72,11 @@ def omit_FC():
 
 def dbl_conv(activation_fn=sigmoid):
     for j in range(3):
+<<<<<<< HEAD
         print( "Conv + Conv + FC architecture")
+=======
+        print("Conv + Conv + FC architecture")
+>>>>>>> 4dbac93ec68063f0dd08e0e8c882eed51ee57fc4
         net = Network([
             ConvPoolLayer(image_shape=(mini_batch_size, 1, 28, 28), 
                           filter_shape=(20, 1, 5, 5), 
@@ -88,7 +100,11 @@ def dbl_conv(activation_fn=sigmoid):
 def regularized_dbl_conv():
     for lmbda in [0.00001, 0.0001, 0.001, 0.01, 0.1, 1.0, 10.0, 100.0]:
         for j in range(3):
+<<<<<<< HEAD
             print ("Conv + Conv + FC num %s, with regularization %s" % (j, lmbda))
+=======
+            print("Conv + Conv + FC num %s, with regularization %s" % (j, lmbda))
+>>>>>>> 4dbac93ec68063f0dd08e0e8c882eed51ee57fc4
             net = Network([
                 ConvPoolLayer(image_shape=(mini_batch_size, 1, 28, 28), 
                               filter_shape=(20, 1, 5, 5), 
@@ -103,7 +119,11 @@ def regularized_dbl_conv():
 def dbl_conv_relu():
     for lmbda in [0.0, 0.00001, 0.0001, 0.001, 0.01, 0.1, 1.0, 10.0, 100.0]:
         for j in range(3):
+<<<<<<< HEAD
             print ("Conv + Conv + FC num %s, relu, with regularization %s" % (j, lmbda))
+=======
+            print("Conv + Conv + FC num %s, relu, with regularization %s" % (j, lmbda))
+>>>>>>> 4dbac93ec68063f0dd08e0e8c882eed51ee57fc4
             net = Network([
                 ConvPoolLayer(image_shape=(mini_batch_size, 1, 28, 28), 
                               filter_shape=(20, 1, 5, 5), 
@@ -128,7 +148,11 @@ def expanded_data(n=100):
     expanded_training_data, _, _ = network3.load_data_shared(
         "../data/mnist_expanded.pkl.gz")
     for j in range(3):
+<<<<<<< HEAD
         print ("Training with expanded data, %s neurons in the FC layer, run num %s" % (n, j))
+=======
+        print("Training with expanded data, %s neurons in the FC layer, run num %s" % (n, j))
+>>>>>>> 4dbac93ec68063f0dd08e0e8c882eed51ee57fc4
         net = Network([
             ConvPoolLayer(image_shape=(mini_batch_size, 1, 28, 28), 
                           filter_shape=(20, 1, 5, 5), 
@@ -152,7 +176,11 @@ def expanded_data_double_fc(n=100):
     expanded_training_data, _, _ = network3.load_data_shared(
         "../data/mnist_expanded.pkl.gz")
     for j in range(3):
+<<<<<<< HEAD
         print ("Training with expanded data, %s neurons in two FC layers, run num %s" % (n, j))
+=======
+        print("Training with expanded data, %s neurons in two FC layers, run num %s" % (n, j))
+>>>>>>> 4dbac93ec68063f0dd08e0e8c882eed51ee57fc4
         net = Network([
             ConvPoolLayer(image_shape=(mini_batch_size, 1, 28, 28), 
                           filter_shape=(20, 1, 5, 5), 
@@ -173,8 +201,13 @@ def double_fc_dropout(p0, p1, p2, repetitions):
         "../data/mnist_expanded.pkl.gz")
     nets = []
     for j in range(repetitions):
+<<<<<<< HEAD
         print ("\n\nTraining using a dropout network with parameters ",p0,p1,p2)
         print ("Training with expanded data, run num %s" % j)
+=======
+        print("\n\nTraining using a dropout network with parameters ",p0,p1,p2)
+        print("Training with expanded data, run num %s" % j)
+>>>>>>> 4dbac93ec68063f0dd08e0e8c882eed51ee57fc4
         net = Network([
             ConvPoolLayer(image_shape=(mini_batch_size, 1, 28, 28), 
                           filter_shape=(20, 1, 5, 5), 
@@ -227,7 +260,11 @@ def ensemble(nets):
                        if plurality_test_predictions[j] != test_y_eval[j]]
     erroneous_predictions = [plurality(all_test_predictions[j])
                              for j in error_locations]
+<<<<<<< HEAD
     print ("Accuracy is {:.2%}".format((1-len(error_locations)/10000.0)))
+=======
+    print("Accuracy is {:.2%}".format((1-len(error_locations)/10000.0)))
+>>>>>>> 4dbac93ec68063f0dd08e0e8c882eed51ee57fc4
     return error_locations, erroneous_predictions
 
 def plot_errors(error_locations, erroneous_predictions=None):

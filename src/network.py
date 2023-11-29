@@ -1,6 +1,9 @@
+# %load network.py
+
 """
 network.py
 ~~~~~~~~~~
+IT WORKS
 
 A module to implement the stochastic gradient descent learning
 algorithm for a feedforward neural network.  Gradients are calculated
@@ -79,10 +82,20 @@ class Network(object):
         network will be evaluated against the test data after each
         epoch, and partial progress printed out.  This is useful for
         tracking progress, but slows things down substantially."""
+<<<<<<< HEAD
         if test_data: n_test = len(test_data)
         self.mini_batch_size = mini_batch_size  # to be used in other functions
         n = len(training_data)
         start = time.time()  # begin timer
+=======
+
+        training_data = list(training_data)
+        n = len(training_data)
+
+        if test_data:
+            test_data = list(test_data)
+            n_test = len(test_data)
+>>>>>>> 4dbac93ec68063f0dd08e0e8c882eed51ee57fc4
 
         for j in range(epochs):
             random.shuffle(training_data)
@@ -90,8 +103,17 @@ class Network(object):
             mini_batches = [
                 training_data[k:k+mini_batch_size]
                 for k in range(0, n, mini_batch_size)]
+<<<<<<< HEAD
             
             mini_batches_X, mini_batches_Y = [], []
+=======
+            for mini_batch in mini_batches:
+                self.update_mini_batch(mini_batch, eta)
+            if test_data:
+                print("Epoch {} : {} / {}".format(j,self.evaluate(test_data),n_test))
+            else:
+                print("Epoch {} complete".format(j))
+>>>>>>> 4dbac93ec68063f0dd08e0e8c882eed51ee57fc4
 
             for batch in mini_batches:
                 mini_batches_X.append(np.column_stack(tuple([batch[k][0]

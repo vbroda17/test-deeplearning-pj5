@@ -25,9 +25,6 @@ http://deeplearning.net/tutorial/lenet.html ), from Misha Denil's
 implementation of dropout (https://github.com/mdenil/dropout ), and
 from Chris Olah (http://colah.github.io ).
 
-Written for Theano 0.6 and 0.7, needs some changes for more recent
-versions of Theano.
-
 """
 
 #### Libraries
@@ -42,9 +39,13 @@ import theano.tensor as T
 from theano.tensor.nnet import conv
 from theano.tensor.nnet import softmax
 from theano.tensor import shared_randomstreams
+<<<<<<< HEAD
 # from theano.tensor.signal import downsample
 from theano.tensor.signal import pool
 
+=======
+from theano.tensor.signal.pool import pool_2d
+>>>>>>> 4dbac93ec68063f0dd08e0e8c882eed51ee57fc4
 
 # Activation functions for neurons
 def linear(z): return z
@@ -66,10 +67,17 @@ else:
         "network3.py to set\nthe GPU flag to True.")
 
 #### Load the MNIST data
+<<<<<<< HEAD
 def load_data_shared(filename="../data/mnist.pkl.gz"):
     with gzip.open(filename, 'rb') as f:
         training_data, validation_data, test_data = pickle.load(f, encoding="latin1")
         return training_data, validation_data, test_data
+=======
+def load_data_shared(filename="mnist.pkl.gz"):
+    f = gzip.open(filename, 'rb')
+    training_data, validation_data, test_data = pickle.load(f, encoding="latin1")
+    f.close()
+>>>>>>> 4dbac93ec68063f0dd08e0e8c882eed51ee57fc4
     def shared(data):
         """Place the data into shared variables.  This allows Theano to copy
         the data to the GPU, if one is available.
@@ -99,7 +107,11 @@ class Network(object):
         self.y = T.ivector("y")
         init_layer = self.layers[0]
         init_layer.set_inpt(self.x, self.x, self.mini_batch_size)
+<<<<<<< HEAD
         for j in range(1, len(self.layers)):
+=======
+        for j in range(1, len(self.layers)): # xrange() was renamed to range() in Python 3.
+>>>>>>> 4dbac93ec68063f0dd08e0e8c882eed51ee57fc4
             prev_layer, layer  = self.layers[j-1], self.layers[j]
             layer.set_inpt(
                 prev_layer.output, prev_layer.output_dropout, self.mini_batch_size)
@@ -114,9 +126,9 @@ class Network(object):
         test_x, test_y = test_data
 
         # compute number of minibatches for training, validation and testing
-        num_training_batches = size(training_data)/mini_batch_size
-        num_validation_batches = size(validation_data)/mini_batch_size
-        num_test_batches = size(test_data)/mini_batch_size
+        num_training_batches = int(size(training_data)/mini_batch_size)
+        num_validation_batches = int(size(validation_data)/mini_batch_size)
+        num_test_batches = int(size(test_data)/mini_batch_size)
 
         # define the (regularized) cost function, symbolic gradients, and updates
         l2_norm_squared = sum([(layer.w**2).sum() for layer in self.layers])
@@ -231,8 +243,13 @@ class ConvPoolLayer(object):
         conv_out = conv.conv2d(
             input=self.inpt, filters=self.w, filter_shape=self.filter_shape,
             image_shape=self.image_shape)
+<<<<<<< HEAD
         pooled_out = pool.pool_2d(
             input=conv_out, ds=self.poolsize, ignore_border=True)
+=======
+        pooled_out = pool_2d(
+            input=conv_out, ws=self.poolsize, ignore_border=True)
+>>>>>>> 4dbac93ec68063f0dd08e0e8c882eed51ee57fc4
         self.output = self.activation_fn(
             pooled_out + self.b.dimshuffle('x', 0, 'x', 'x'))
         self.output_dropout = self.output  # no dropout in the convolutional layers

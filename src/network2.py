@@ -132,7 +132,8 @@ class Network(object):
             monitor_evaluation_cost=False,
             monitor_evaluation_accuracy=False,
             monitor_training_cost=False,
-            monitor_training_accuracy=False):
+            monitor_training_accuracy=False,
+            early_stopping_n = 0):
         """Train the neural network using mini-batch stochastic gradient
         descent.  The ``training_data`` is a list of tuples ``(x, y)``
         representing the training inputs and the desired outputs.  The
@@ -152,8 +153,21 @@ class Network(object):
         are empty if the corresponding flag is not set.
 
         """
-        if evaluation_data: n_data = len(evaluation_data)
+
+        # early stopping functionality:
+        best_accuracy=1
+
+        training_data = list(training_data)
         n = len(training_data)
+
+        if evaluation_data:
+            evaluation_data = list(evaluation_data)
+            n_data = len(evaluation_data)
+
+        # early stopping functionality:
+        best_accuracy=0
+        no_accuracy_change=0
+
         evaluation_cost, evaluation_accuracy = [], []
         training_cost, training_accuracy = [], []
         for j in range(epochs):
@@ -164,7 +178,13 @@ class Network(object):
             for mini_batch in mini_batches:
                 self.update_mini_batch(
                     mini_batch, eta, lmbda, len(training_data))
+<<<<<<< HEAD
             print("Epoch %s training complete" % j)
+=======
+
+            print("Epoch %s training complete" % j)
+
+>>>>>>> 4dbac93ec68063f0dd08e0e8c882eed51ee57fc4
             if monitor_training_cost:
                 cost = self.total_cost(training_data, lmbda)
                 training_cost.append(cost)
@@ -172,8 +192,12 @@ class Network(object):
             if monitor_training_accuracy:
                 accuracy = self.accuracy(training_data, convert=True)
                 training_accuracy.append(accuracy)
+<<<<<<< HEAD
                 print("Accuracy on training data: {} / {}".format(
                     accuracy, n))
+=======
+                print("Accuracy on training data: {} / {}".format(accuracy, n))
+>>>>>>> 4dbac93ec68063f0dd08e0e8c882eed51ee57fc4
             if monitor_evaluation_cost:
                 cost = self.total_cost(evaluation_data, lmbda, convert=True)
                 evaluation_cost.append(cost)
@@ -181,9 +205,27 @@ class Network(object):
             if monitor_evaluation_accuracy:
                 accuracy = self.accuracy(evaluation_data)
                 evaluation_accuracy.append(accuracy)
+<<<<<<< HEAD
                 print("Accuracy on evaluation data: {} / {}".format(
                     self.accuracy(evaluation_data), n_data))
             print
+=======
+                print("Accuracy on evaluation data: {} / {}".format(self.accuracy(evaluation_data), n_data))
+
+            # Early stopping:
+            if early_stopping_n > 0:
+                if accuracy > best_accuracy:
+                    best_accuracy = accuracy
+                    no_accuracy_change = 0
+                    #print("Early-stopping: Best so far {}".format(best_accuracy))
+                else:
+                    no_accuracy_change += 1
+
+                if (no_accuracy_change == early_stopping_n):
+                    #print("Early-stopping: No accuracy change in last epochs: {}".format(early_stopping_n))
+                    return evaluation_cost, evaluation_accuracy, training_cost, training_accuracy
+
+>>>>>>> 4dbac93ec68063f0dd08e0e8c882eed51ee57fc4
         return evaluation_cost, evaluation_accuracy, \
             training_cost, training_accuracy
 
@@ -269,7 +311,9 @@ class Network(object):
         else:
             results = [(np.argmax(self.feedforward(x)), y)
                         for (x, y) in data]
-        return sum(int(x == y) for (x, y) in results)
+
+        result_accuracy = sum(int(x == y) for (x, y) in results)
+        return result_accuracy
 
     def total_cost(self, data, lmbda, convert=False):
         """Return the total cost for the data set ``data``.  The flag
@@ -283,8 +327,7 @@ class Network(object):
             a = self.feedforward(x)
             if convert: y = vectorized_result(y)
             cost += self.cost.fn(a, y)/len(data)
-        cost += 0.5*(lmbda/len(data))*sum(
-            np.linalg.norm(w)**2 for w in self.weights)
+            cost += 0.5*(lmbda/len(data))*sum(np.linalg.norm(w)**2 for w in self.weights) # '**' - to the power of.
         return cost
 
     def save(self, filename):
