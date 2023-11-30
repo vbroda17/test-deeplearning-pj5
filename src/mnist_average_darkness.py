@@ -34,11 +34,7 @@ def main():
     num_correct = sum(int(guess_digit(image, avgs) == digit)
                       for image, digit in zip(test_data[0], test_data[1]))
     print("Baseline classifier using average darkness of image.")
-<<<<<<< HEAD
-    print("%s of %s values correct." % (num_correct, len(test_data[1])))
-=======
     print("{0} of {1} values correct.".format(num_correct, len(test_data[1])))
->>>>>>> 4dbac93ec68063f0dd08e0e8c882eed51ee57fc4
 
 def avg_darknesses(training_data):
     """ Return a defaultdict whose keys are the digits 0 through 9.

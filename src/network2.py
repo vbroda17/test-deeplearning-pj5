@@ -178,13 +178,7 @@ class Network(object):
             for mini_batch in mini_batches:
                 self.update_mini_batch(
                     mini_batch, eta, lmbda, len(training_data))
-<<<<<<< HEAD
             print("Epoch %s training complete" % j)
-=======
-
-            print("Epoch %s training complete" % j)
-
->>>>>>> 4dbac93ec68063f0dd08e0e8c882eed51ee57fc4
             if monitor_training_cost:
                 cost = self.total_cost(training_data, lmbda)
                 training_cost.append(cost)
@@ -192,12 +186,7 @@ class Network(object):
             if monitor_training_accuracy:
                 accuracy = self.accuracy(training_data, convert=True)
                 training_accuracy.append(accuracy)
-<<<<<<< HEAD
-                print("Accuracy on training data: {} / {}".format(
-                    accuracy, n))
-=======
                 print("Accuracy on training data: {} / {}".format(accuracy, n))
->>>>>>> 4dbac93ec68063f0dd08e0e8c882eed51ee57fc4
             if monitor_evaluation_cost:
                 cost = self.total_cost(evaluation_data, lmbda, convert=True)
                 evaluation_cost.append(cost)
@@ -205,11 +194,6 @@ class Network(object):
             if monitor_evaluation_accuracy:
                 accuracy = self.accuracy(evaluation_data)
                 evaluation_accuracy.append(accuracy)
-<<<<<<< HEAD
-                print("Accuracy on evaluation data: {} / {}".format(
-                    self.accuracy(evaluation_data), n_data))
-            print
-=======
                 print("Accuracy on evaluation data: {} / {}".format(self.accuracy(evaluation_data), n_data))
 
             # Early stopping:
@@ -225,7 +209,6 @@ class Network(object):
                     #print("Early-stopping: No accuracy change in last epochs: {}".format(early_stopping_n))
                     return evaluation_cost, evaluation_accuracy, training_cost, training_accuracy
 
->>>>>>> 4dbac93ec68063f0dd08e0e8c882eed51ee57fc4
         return evaluation_cost, evaluation_accuracy, \
             training_cost, training_accuracy
 
